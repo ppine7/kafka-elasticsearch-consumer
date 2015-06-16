@@ -35,7 +35,7 @@
 
 **1. Download the code into a `$CONSUMER_HOME` dir.
 
-**2. Update (or create your own copy of) the `$CONSUMER_HOME`/src/main/resources/kafkaESConsumer.properties file - update all relevant properties as explained in the comments
+**2. create your own copy of the `$CONSUMER_HOME`/src/main/resources/kafkaESConsumer.properties file - update all relevant properties as explained in the comments
 
 **3. update `$CONSUMER_HOME`/src/main/resources/logback.xml - specify directory you want to store logs in:
 	<property name="LOG_DIR" value="/tmp"/>
@@ -47,7 +47,7 @@
 
 **5. run the app [use JDK1.8] :  
 		cd $CONSUMER_HOME/bin
-		java -jar kafka-es-consumer-0.2.jar kafkaESConsumer.properties
+		java -jar kafka-es-consumer-0.2.jar <absolutePathToConsumerPropertiesFile>
 
  
 
@@ -55,7 +55,7 @@
 
 **1. Download the code. Let's say, `$CONSUMER_HOME` contains the code.**
 
-**2. From the `$CONSUMER_HOME`, build the maven project.** - _this step will create the JAR file of the Consumer and the dependency files in the ` $CONSUMER_HOME/bin ` directory_
+**2. From the `$CONSUMER_HOME`, build the maven project.** - _this step will create the JAR file with all Consumer dependencies inside
 
     mvn clean package
 
@@ -86,12 +86,12 @@ _The details & guide for each property in the config file is given in the proper
     #User as which the Consumer Daemon has to be run
     USER=
 
-    ./consumerNew.sh -p start -c $CONSUMER_HOME/bin/classes/<consumerGroupName><topicName><PartitionNum>.properties
+    ./consumerNew.sh -p start -c $CONSUMER_HOME/config/<consumerGroupName><topicName><PartitionNum>.properties
 
     # ' -p ' - Can take either start | stop | restart
     
     # ' -c ' - the config file for the consumer instance with path 
-    # (e.g: '$CONSUMER_HOME/bin/classes/<consumerGroupName><topicName><PartitionNum>.properties')
+    # (e.g: '$CONSUMER_HOME/config/<consumerGroupName><topicName><PartitionNum>.properties')
 
 **5. Confirm the successful start of the Consumer by looking into:**
 
@@ -114,13 +114,13 @@ _The below log file contains ERROR during starting, restarting & stopping the Co
 
     cd $CONSUMER_HOME/scripts
 
-    ./consumerNew.sh -p stop -c $CONSUMER_HOME/bin/classes/<consumerGroupName><topicName><PartitionNum>.properties
+    ./consumerNew.sh -p stop -c $CONSUMER_HOME/config/<consumerGroupName><topicName><PartitionNum>.properties
 
 **8. To Restart the Consumer Instance:**
 
     cd $CONSUMER_HOME/scripts
 
-    ./consumerNew.sh -p restart -c $CONSUMER_HOME/bin/classes/<consumerGroupName><topicName><PartitionNum>.properties
+    ./consumerNew.sh -p restart -c $CONSUMER_HOME/config/<consumerGroupName><topicName><PartitionNum>.properties
 
 # Versions:
 
