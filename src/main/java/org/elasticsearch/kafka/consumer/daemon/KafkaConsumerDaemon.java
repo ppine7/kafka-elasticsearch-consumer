@@ -1,5 +1,7 @@
 package org.elasticsearch.kafka.consumer.daemon;
 
+import java.time.LocalDateTime;
+
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
@@ -18,6 +20,7 @@ public class KafkaConsumerDaemon implements Daemon {
 	private boolean stopped = false;
 	public ConsumerJob kafkaConsumerJob = null;
 	private boolean isConsumeJobInProgress = false;
+	private ConsumerConfig kafkaConsumerConfig;
 	
 	@Override
     public void init(DaemonContext daemonContext) throws DaemonInitException, Exception {
@@ -30,7 +33,7 @@ public class KafkaConsumerDaemon implements Daemon {
 		//logger.info("Initializing the Kafka Consumer ...");
 		//System.out.println("Initializing the Kafka Consumer ...");
 		
-		ConsumerConfig kafkaConsumerConfig = new ConsumerConfig(args[0]);
+		kafkaConsumerConfig = new ConsumerConfig(args[0]);
 		//ConsumerLogger.doInitLogger(kafkaConsumerConfig);
 		//logger = ConsumerLogger.getLogger(this.getClass());
 		logger.info("Created the kafka consumer config ...");
@@ -101,9 +104,14 @@ public class KafkaConsumerDaemon implements Daemon {
     public void stop() throws Exception {
 		logger.info("Received the stop signal, trying to start the Consumer Daemon");
 		stopped = true;
-        while(isConsumeJobInProgress){
+		LocalDateTime stopTime= LocalDateTime.now();
+		while(isConsumeJobInProgress){
         	logger.info(".... Waiting for inprogress Consumer Job to complete ...");
         	Thread.sleep(1000);
+           	if (java.time.Duration.between(stopTime, LocalDateTime.now()).getSeconds() > kafkaConsumerConfig.timeLimitToStopConsumerJob){
+        		logger.info(".... Consumer Job not responding for " + kafkaConsumerConfig.timeLimitToStopConsumerJob +" seconds - stopping the job");
+        		break;
+        	}
         }
         logger.info("Completed waiting for inprogess Consumer Job to finish. Stopping the Consumer....");
         try{

@@ -1,7 +1,6 @@
 package org.elasticsearch.kafka.consumer;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -70,7 +69,9 @@ public class ConsumerConfig {
 
 	// Wait time in seconds between consumer job rounds
 	public final int consumerSleepBetweenFetchsMs;
-
+	//wait time before stop Consumer Job regardless it finished 
+	public final int timeLimitToStopConsumerJob = 10;
+	
 	public String getStartOffsetFrom() {
 		return startOffsetFrom;
 	}
@@ -83,13 +84,11 @@ public class ConsumerConfig {
 		
 	try {
 			logger.info("configFile : " + configFile);
-			
 			prop.load(new FileInputStream(configFile));
-	
 			logger.info("Properties : " + prop);
 		} catch (Exception e) {
 			logger.error("Error reading/loading configFile: " + e.getMessage(), e);
-			throw e;
+			throw e; 
 		}
 
 		kafkaZookeeperList = (String) prop.getProperty("kafkaZookeeperList", "localhost:2181");
