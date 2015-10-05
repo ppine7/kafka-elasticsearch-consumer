@@ -1,0 +1,13 @@
+sudo: false
+language: java
+jdk: oraclejdk8
+install:
+  - true
+#after_success:
+#- mvn clean test jacoco:report coveralls:report
+#- echo TRAVIS_PULL_REQUEST = "${TRAVIS_PULL_REQUEST}" && echo TRAVIS_JDK_VERSION =
+#  “${TRAVIS_JDK_VERSION}” && echo TRAVIS_TAG = "${TRAVIS_TAG}"
+
+# Run the Build
+script:
+  - TERM=dumb ./gradlew clean bintrayUpload -Pbuild=${TRAVIS_BUILD_NUMBER} -Prelease=0.0.0
